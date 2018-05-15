@@ -70,11 +70,15 @@ export default function optimize(name, content, opts = DEFAULT_SVGO_OPTIONS) {
         / id="(\w+)"/gi,
         ` id="${name}_$1"`
       );
-      let scopedIdConsumer = scopedIdProvider.replace(
+      let scopedIdUrl = scopedIdProvider.replace(
         /="url\(#(\w+)\)"/gi,
         `="url(#${name}_$1)"`
       );
-      returnValue = scopedIdConsumer
+      let scopedHref = scopedIdUrl.replace(
+        /href="#(\w+)"/gi,
+        `href="#${name}_$1"`
+      );
+      returnValue = scopedHref
     }
   });
 
