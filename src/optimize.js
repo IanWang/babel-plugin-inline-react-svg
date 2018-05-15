@@ -50,7 +50,13 @@ function validateAndFix(opts) {
     .forEach(key => opts.plugins.push(key));
 }
 
-export default function optimize(content, opts = {}) {
+const DEFAULT_SVGO_OPTIONS = {
+  plugins: [{
+    cleanupIDs: false
+  }]
+}
+
+export default function optimize(name, content, opts = DEFAULT_SVGO_OPTIONS) {
   validateAndFix(opts);
   const svgo = new Svgo(opts);
 
@@ -60,7 +66,15 @@ export default function optimize(content, opts = {}) {
     if (response.error) {
       returnValue = response.error;
     } else {
-      returnValue = response.data;
+      let scopedIdProvider = response.data.replace(
+        / id="(\w+)"/gi,
+        ` id="${name}_$1"`
+      );
+      let scopedIdConsumer = scopedIdProvider.replace(
+        / fill="url\(#(\w+)\)"/gi,
+        ` fill="url(#${name}_$1)"`
+      );
+      returnValue = scopedIdConsumer
     }
   });
 
