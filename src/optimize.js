@@ -71,8 +71,8 @@ export default function optimize(name, content, opts = DEFAULT_SVGO_OPTIONS) {
         ` id="${name}_$1"`
       );
       let scopedIdConsumer = scopedIdProvider.replace(
-        / fill="url\(#(\w+)\)"/gi,
-        ` fill="url(#${name}_$1)"`
+        /="url\(#(\w+)\)"/gi,
+        `="url(#${name}_$1)"`
       );
       returnValue = scopedIdConsumer
     }
